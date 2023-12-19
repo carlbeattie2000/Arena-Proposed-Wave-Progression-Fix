@@ -1,5 +1,5 @@
 export interface AccountTypes {
-  name: string,
-  percentage: number,
-  accountsAmount: number,
+  name: string;
+  percentage: number;
+  accountsAmount: number;
 }

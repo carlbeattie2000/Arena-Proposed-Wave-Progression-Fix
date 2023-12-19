@@ -6,25 +6,25 @@ import CreateTestData from './CreateTestData';
 import NotFound from '../NotFound';
 
 const router = createBrowserRouter([
-{
-  path: '*',
-  element: <NotFound />
-},
-{
-  path: '/dashboard',
-  element: <Home />
-},
-{
-  path: '/dashboard/create-test-data',
-  element: <CreateTestData />
-}
-])
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+  {
+    path: '/dashboard',
+    element: <Home />,
+  },
+  {
+    path: '/dashboard/create-test-data',
+    element: <CreateTestData />,
+  },
+]);
 
 export default function App() {
   const [token, setToken] = useState<string>('');
 
   if (!token) {
-    setToken("testing")
+    setToken('testing');
     return <Login setToken={setToken} />;
   }
 
