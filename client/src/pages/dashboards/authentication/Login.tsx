@@ -51,7 +51,7 @@ export default function Login({ setToken }: LoginProps) {
       )}
 
       <form onSubmit={attemptLogin}>
-        <FormControl isInvalid={emailError}>
+        <FormControl isInvalid={emailError !== ""}>
           <FormLabel>Email</FormLabel>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           {(!emailError && <FormHelperText>Please enter your email.</FormHelperText>) || (
