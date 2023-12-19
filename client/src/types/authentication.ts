@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from 'react';
 
 export interface LoginProps {
-  setToken: Dispatch<SetStateAction<string>>
+  setToken: Dispatch<SetStateAction<string>>;
 }

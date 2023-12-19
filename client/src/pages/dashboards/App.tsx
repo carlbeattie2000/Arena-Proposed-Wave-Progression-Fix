@@ -4,21 +4,21 @@ import Login from './authentication/Login';
 import { useState } from 'react';
 
 export default function App() {
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string>('');
 
   if (!token) {
-    return <Login setToken={setToken} />
+    return <Login setToken={setToken} />;
   }
 
   return (
-      <div>
+    <div>
       <BrowserRouter>
-      <Routes>
-      <Route path='/dashboard'>
-      <Home />
-      </Route>
-      </Routes>
+        <Routes>
+          <Route path="/dashboard">
+            <Home />
+          </Route>
+        </Routes>
       </BrowserRouter>
-      </div>
-      )
+    </div>
+  );
 }
