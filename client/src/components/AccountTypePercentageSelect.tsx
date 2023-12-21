@@ -22,58 +22,71 @@ export default function AccountTypePercentageSelect({
   accountsCreatingAmount,
   setAccountTypes,
 }: AccountTypePercentageSelectProps) {
-  function rebalancePercentages(usedPercentage: number, name: string): AccountTypes[] {
+  function percentageDistribution(accounts: AccountTypes[], usedPercentage: number, increasedAmount: number, name: string): AccountTypes[] {
     const percentageLeft = 100 - usedPercentage;
-    const accountsUpdating = accountTypes.filter(acc => acc.name !== name && acc.percentage !== 0);
+    const accountsUpdating = accounts.filter(acc => acc.name !== name && acc.percentage !== 0);
 
-    let percentageForEachAccount = 0;
+    if (percentageLeft == 0) {
+      for (const account of accountsUpdating) {
+        account.percentage = 0;
+      }
 
-    if (percentageLeft > 0) {
-      percentageForEachAccount = percentageLeft / accountsUpdating.length;
+      return accounts;
     }
+
+    const changedAmountForEach = Math.round((increasedAmount / accountsUpdating.length) * 1000) / 1000;
 
     for (const account of accountsUpdating) {
-      account.percentage = percentageForEachAccount;
+      account.percentage += Math.round(-(changedAmountForEach) * 100) / 100;
+
+      if (account.percentage < 0) {
+        account.percentage = 0;
+      }
     }
 
-    return accountTypes;
-  }
+    const total = accounts.reduce((x, y) => x+=y.percentage, 0);
+    const percentageBellowFull = 100 - total > 0;
 
-  function percentageDistribution(usedPercentage: number, increasedAmount: number, name: string) {
-    const percentageLeft = 100 - usedPercentage;
-    const accountsUpdating = accountTypes.filter(acc => acc.name !== name && acc.percentage !== 0);
-
-    for (const account of accountsUpdating) {
-      // if negative take
-      // if positive add
+    if (percentageBellowFull) {
+      accountsUpdating[0].percentage += 100 - total;
     }
 
+    return accounts;
 }
 
   function updateSliderValues(e: number, name: string) {
-    const accountIncreasing = accountTypes.filter((type) => type.name === name)[0];
+    const accountTypesCopy: AccountTypes[] = JSON.parse(JSON.stringify(accountTypes));
+
+    const accountIncreasing = accountTypesCopy.filter((type) => type.name === name)[0];
     const changedAmount = e - accountIncreasing.percentage;
 
-    const accountTypeChangingAtZero = accountIncreasing.percentage === 0;
-    const allAtZero = accountTypes.filter(acc => acc.name !== name).every(acc => acc.percentage === 0);
+    const allAtZeroSpareTypeUpdating = accountTypesCopy.every(acc => {
+      if (acc.name === name && acc.percentage !== 0) {
+        return true;
+      }
+
+      if (acc.percentage === 0) {
+        return true;
+      }
+    });
     const isAboveMaxPercentage = accountIncreasing.percentage + changedAmount > 100;
 
-    if (isAboveMaxPercentage || (allAtZero && !accountTypeChangingAtZero)) {
+    if (isAboveMaxPercentage || (allAtZeroSpareTypeUpdating)) {
       return;
     }
 
     accountIncreasing.percentage += changedAmount;
 
-    rebalancePercentages(e, accountIncreasing.name);
-    setAccountTypes([...accountTypes]);
-    calculateEachAccountTypeAmount();
+    const updatedAccountTypes = percentageDistribution(accountTypesCopy, e, changedAmount, accountIncreasing.name);
+    setAccountTypes([...updatedAccountTypes]);
+    calculateEachAccountTypeAmount(updatedAccountTypes);
   }
 
-  function calculateEachAccountTypeAmount() {
-    for (let i = 0; i < accountTypes.length; i++) {
-      accountTypes[i].accountsAmount = Math.floor(
-        accountsCreatingAmount * (accountTypes[i].percentage / 100),
-      );
+  function calculateEachAccountTypeAmount(accounts: AccountTypes[]) {
+    for (let i = 0; i < accounts.length; i++) {
+      const newValue = Math.round((accounts[i].percentage / 100) * accountsCreatingAmount);
+
+      accounts[i].accountsAmount = newValue;
     }
   }
 
@@ -86,6 +99,8 @@ export default function AccountTypePercentageSelect({
       <Slider
         aria-label="slider-ex-1"
         defaultValue={account.percentage}
+        value={account.percentage}
+        step={1}
         onChange={(e) => updateSliderValues(e, account.name)}
       >
         <SliderTrack>
