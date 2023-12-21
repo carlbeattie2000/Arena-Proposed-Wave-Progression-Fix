@@ -1,4 +1,12 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { getRandomArbitrary } from '../helpers/randomNumber';
 import { AccountTypes } from '../types/testAccountData';
 
@@ -63,10 +71,18 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
     }
   }, []);
 
-  function updateCreatingAccountsAmount(e: ChangeEvent<HTMLInputElement>) {
-    setAccountsCreatingAmount(parseInt(e.target.value));
+  useEffect(() => {
+    function calculateEachAccountTypeAmount() {
+      for (const account of accountTypes) {
+        account.accountsAmount = Math.floor(accountsCreatingAmount * (account.percentage / 10));
+      }
+    }
 
     calculateEachAccountTypeAmount();
+  }, [accountsCreatingAmount, accountTypes]);
+
+  function updateCreatingAccountsAmount(e: ChangeEvent<HTMLInputElement>) {
+    setAccountsCreatingAmount(parseInt(e.target.value));
   }
 
   function attemptCreateTestData(e: FormEvent) {
@@ -80,14 +96,6 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
     if (isNaN(accountsCreatingAmount)) {
       setAccountsAmountError('Invalid number!');
       return;
-    }
-  }
-
-  function calculateEachAccountTypeAmount() {
-    for (let i = 0; i < accounts.length; i++) {
-      accounts[i].accountsAmount = Math.floor(
-        accountsCreatingAmount * (accounts[i].percentage / 10),
-      );
     }
   }
 

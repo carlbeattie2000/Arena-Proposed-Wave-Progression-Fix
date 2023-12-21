@@ -22,9 +22,14 @@ export default function AccountTypePercentageSelect({
   accountsCreatingAmount,
   setAccountTypes,
 }: AccountTypePercentageSelectProps) {
-  function percentageDistribution(accounts: AccountTypes[], usedPercentage: number, increasedAmount: number, name: string): AccountTypes[] {
+  function percentageDistribution(
+    accounts: AccountTypes[],
+    usedPercentage: number,
+    increasedAmount: number,
+    name: string,
+  ): AccountTypes[] {
     const percentageLeft = 100 - usedPercentage;
-    const accountsUpdating = accounts.filter(acc => acc.name !== name && acc.percentage !== 0);
+    const accountsUpdating = accounts.filter((acc) => acc.name !== name && acc.percentage !== 0);
 
     if (percentageLeft == 0) {
       for (const account of accountsUpdating) {
@@ -34,17 +39,18 @@ export default function AccountTypePercentageSelect({
       return accounts;
     }
 
-    const changedAmountForEach = Math.round((increasedAmount / accountsUpdating.length) * 1000) / 1000;
+    const changedAmountForEach =
+      Math.round((increasedAmount / accountsUpdating.length) * 1000) / 1000;
 
     for (const account of accountsUpdating) {
-      account.percentage += Math.round(-(changedAmountForEach) * 100) / 100;
+      account.percentage += Math.round(-changedAmountForEach * 100) / 100;
 
       if (account.percentage < 0) {
         account.percentage = 0;
       }
     }
 
-    const total = accounts.reduce((x, y) => x+=y.percentage, 0);
+    const total = accounts.reduce((x, y) => (x += y.percentage), 0);
     const percentageBellowFull = 100 - total > 0;
 
     if (percentageBellowFull) {
@@ -52,7 +58,7 @@ export default function AccountTypePercentageSelect({
     }
 
     return accounts;
-}
+  }
 
   function updateSliderValues(e: number, name: string) {
     const accountTypesCopy: AccountTypes[] = JSON.parse(JSON.stringify(accountTypes));
@@ -60,7 +66,7 @@ export default function AccountTypePercentageSelect({
     const accountIncreasing = accountTypesCopy.filter((type) => type.name === name)[0];
     const changedAmount = e - accountIncreasing.percentage;
 
-    const allAtZeroSpareTypeUpdating = accountTypesCopy.every(acc => {
+    const allAtZeroSpareTypeUpdating = accountTypesCopy.every((acc) => {
       if (acc.name === name && acc.percentage !== 0) {
         return true;
       }
@@ -71,13 +77,18 @@ export default function AccountTypePercentageSelect({
     });
     const isAboveMaxPercentage = accountIncreasing.percentage + changedAmount > 100;
 
-    if (isAboveMaxPercentage || (allAtZeroSpareTypeUpdating)) {
+    if (isAboveMaxPercentage || allAtZeroSpareTypeUpdating) {
       return;
     }
 
     accountIncreasing.percentage += changedAmount;
 
-    const updatedAccountTypes = percentageDistribution(accountTypesCopy, e, changedAmount, accountIncreasing.name);
+    const updatedAccountTypes = percentageDistribution(
+      accountTypesCopy,
+      e,
+      changedAmount,
+      accountIncreasing.name,
+    );
     setAccountTypes([...updatedAccountTypes]);
     calculateEachAccountTypeAmount(updatedAccountTypes);
   }
