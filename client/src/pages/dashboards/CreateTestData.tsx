@@ -7,6 +7,11 @@ import {
   Heading,
   Input,
   Text,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from '@chakra-ui/react';
 import Nav from '../../components/Nav';
 import AccountTypePercentageSelect from '../../components/AccountTypePercentageSelect';
@@ -32,11 +37,13 @@ export default function CreateTestData() {
         <form onSubmit={attemptCreateTestData}>
           <FormControl isInvalid={accountsAmountError !== ''}>
             <FormLabel>Ammount of accounts to create</FormLabel>
-            <Input
-              type="number"
-              value={accountsCreatingAmount}
-              onChange={(e) => updateCreatingAccountsAmount(e)}
-            />
+            <NumberInput defaultValue={500} value={accountsCreatingAmount} onChange={(e) => updateCreatingAccountsAmount(e)} min={500} max={500 * 1000000}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             {accountsAmountError && <FormErrorMessage>{accountsAmountError}</FormErrorMessage>}
           </FormControl>
 

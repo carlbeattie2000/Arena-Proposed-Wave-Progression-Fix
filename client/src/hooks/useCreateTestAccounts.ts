@@ -1,15 +1,14 @@
 import {
-  ChangeEvent,
   Dispatch,
   FormEvent,
   SetStateAction,
-  useCallback,
   useEffect,
   useState,
 } from 'react';
 import { getRandomArbitrary } from '../helpers/randomNumber';
 import { AccountTypes } from '../types/testAccountData';
 
+const defaultCreateAccountsAmount = 500;
 const accounts: AccountTypes[] = [
   {
     name: 'Standard',
@@ -42,7 +41,7 @@ export type createTestAccountsHook = [
   (e: FormEvent) => void,
   string,
   number,
-  (e: ChangeEvent<HTMLInputElement>) => void,
+  (e: string) => void,
   AccountTypes[],
   Dispatch<SetStateAction<AccountTypes[]>>,
 ];
@@ -51,7 +50,7 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
   const [accountTypes, setAccountTypes] = useState<AccountTypes[]>([]);
   const [accountsAmountError, setAccountsAmountError] = useState('');
 
-  const [accountsCreatingAmount, setAccountsCreatingAmount] = useState(0);
+  const [accountsCreatingAmount, setAccountsCreatingAmount] = useState(defaultCreateAccountsAmount);
 
   useEffect(() => {
     let totalPercentageLeft = 100;
@@ -65,24 +64,32 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
       const percentage = getRandomArbitrary(totalPercentageLeft * 0.1, totalPercentageLeft * 0.6);
 
       accounts[i].percentage = percentage;
+      const newValue = Math.round((accounts[i].percentage / 100) * defaultCreateAccountsAmount);
+      accounts[i].accountsAmount = newValue;
+
       totalPercentageLeft -= percentage;
 
       setAccountTypes([...accounts]);
     }
+
   }, []);
 
   useEffect(() => {
     function calculateEachAccountTypeAmount() {
-      for (const account of accountTypes) {
-        account.accountsAmount = Math.floor(accountsCreatingAmount * (account.percentage / 10));
+      for (let i = 0; i < accounts.length; i++) {
+        const newValue = Math.round((accounts[i].percentage / 100) * accountsCreatingAmount);
+
+        accounts[i].accountsAmount = newValue;
       }
+
+      setAccountTypes([...accounts])
     }
 
     calculateEachAccountTypeAmount();
   }, [accountsCreatingAmount, accountTypes]);
 
-  function updateCreatingAccountsAmount(e: ChangeEvent<HTMLInputElement>) {
-    setAccountsCreatingAmount(parseInt(e.target.value));
+  function updateCreatingAccountsAmount(e: string){
+    setAccountsCreatingAmount(parseInt(e))
   }
 
   function attemptCreateTestData(e: FormEvent) {
