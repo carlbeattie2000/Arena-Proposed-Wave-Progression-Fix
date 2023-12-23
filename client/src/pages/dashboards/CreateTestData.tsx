@@ -5,7 +5,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
-  Input,
   Text,
   NumberInput,
   NumberInputField,
@@ -16,8 +15,13 @@ import {
 import Nav from '../../components/Nav';
 import AccountTypePercentageSelect from '../../components/AccountTypePercentageSelect';
 import useCreateTestAccounts from '../../hooks/useCreateTestAccounts';
+import RangeSelect from '../../components/RangeSelect';
 
 export default function CreateTestData() {
+  const date = new Date();
+  const minYear = date.getFullYear() - 7;
+  const maxYear = date.getFullYear();
+
   const [
     attemptCreateTestData,
     accountsAmountError,
@@ -59,6 +63,10 @@ export default function CreateTestData() {
               />
             );
           })}
+
+          <Text as='b'>Other</Text>
+         <RangeSelect label='Select account year range' min={minYear} max={maxYear} minStepsBetween={2} step={1}/>
+         <RangeSelect label='Select account hours range' min={10} max={15000} minStepsBetween={200} step={1} format={true} />
         </form>
       </Center>
     </Container>
