@@ -10,7 +10,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
 import Nav from '../../components/Nav';
 import AccountTypePercentageSelect from '../../components/AccountTypePercentageSelect';
@@ -41,7 +41,13 @@ export default function CreateTestData() {
         <form onSubmit={attemptCreateTestData}>
           <FormControl isInvalid={accountsAmountError !== ''}>
             <FormLabel>Ammount of accounts to create</FormLabel>
-            <NumberInput defaultValue={500} value={accountsCreatingAmount} onChange={(e) => updateCreatingAccountsAmount(e)} min={500} max={500 * 1000000}>
+            <NumberInput
+              defaultValue={500}
+              value={accountsCreatingAmount}
+              onChange={(e) => updateCreatingAccountsAmount(e)}
+              min={500}
+              max={500 * 1000000}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -64,9 +70,22 @@ export default function CreateTestData() {
             );
           })}
 
-          <Text as='b'>Other</Text>
-         <RangeSelect label='Select account year range' min={minYear} max={maxYear} minStepsBetween={2} step={1}/>
-         <RangeSelect label='Select account hours range' min={10} max={15000} minStepsBetween={200} step={1} format={true} />
+          <Text as="b">Other</Text>
+          <RangeSelect
+            label="Select account year range"
+            min={minYear}
+            max={maxYear}
+            minStepsBetween={2}
+            step={1}
+          />
+          <RangeSelect
+            label="Select account hours range"
+            min={10}
+            max={15000}
+            minStepsBetween={200}
+            step={1}
+            format={true}
+          />
         </form>
       </Center>
     </Container>

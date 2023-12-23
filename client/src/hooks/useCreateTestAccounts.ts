@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react';
 import { getRandomArbitrary } from '../helpers/randomNumber';
 import { AccountTypes } from '../types/testAccountData';
 
@@ -81,15 +75,14 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
         accounts[i].accountsAmount = newValue;
       }
 
-      setAccountTypes([...accounts])
+      setAccountTypes([...accounts]);
     }
 
     calculateEachAccountTypeAmount();
-
   }, [accountsCreatingAmount]);
 
-  function updateCreatingAccountsAmount(e: string){
-    setAccountsCreatingAmount(parseInt(e))
+  function updateCreatingAccountsAmount(e: string) {
+    setAccountsCreatingAmount(parseInt(e));
   }
 
   function attemptCreateTestData(e: FormEvent) {
