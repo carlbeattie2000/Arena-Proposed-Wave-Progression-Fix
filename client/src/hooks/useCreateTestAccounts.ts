@@ -71,7 +71,6 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
 
       setAccountTypes([...accounts]);
     }
-
   }, []);
 
   useEffect(() => {
@@ -86,7 +85,8 @@ export default function useCreateTestAccounts(): createTestAccountsHook {
     }
 
     calculateEachAccountTypeAmount();
-  }, [accountsCreatingAmount, accountTypes]);
+
+  }, [accountsCreatingAmount]);
 
   function updateCreatingAccountsAmount(e: string){
     setAccountsCreatingAmount(parseInt(e))
