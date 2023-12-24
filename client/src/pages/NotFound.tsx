@@ -8,7 +8,13 @@ export default function NotFound() {
 
   return (
     <Container maxW="xxl" maxH="xxl" centerContent>
-      <ShortcutSearchPopup isOpen={isOpen} setIsOpen={setIsOpen} modifier="shift" shortcutKey="B" label="search for user" />
+      <ShortcutSearchPopup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        modifier="shift"
+        shortcutKey="B"
+        label="search for user"
+      />
       <Heading>Page Not Found</Heading>
       <RouterLink to="/dashboard">
         <Link>Return Home</Link>
