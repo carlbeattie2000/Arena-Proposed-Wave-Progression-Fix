@@ -1,5 +1,6 @@
-import { Container, HStack, Input, InputGroup, InputRightElement, Kbd } from '@chakra-ui/react';
+import { Container, HStack, Input, InputGroup, InputRightElement, Kbd, Modal, ModalBody, ModalContent, ModalOverlay, isStyleProp } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import ShortcutSearchInput from './ShortcutSearchInput';
 
 interface ShortcutSearchPopupProps {
   modifier: string;
@@ -43,46 +44,13 @@ useEffect(() => {
   }
 
   return (
-    <Container
-      maxW="2xl"
-      maxH="2xl"
-      pos="absolute"
-      top="50%"
-      left="50%"
-      transform="translate(-50%, -50%)"
-    >
-      <InputGroup size="lg">
-        <Input
-          value={inputValue}
-          variant="filled"
-          size="lg"
-          placeholder={label}
-          onInput={(e) => {
-            setInputValue(e.currentTarget.value);
-
-            if (onInput) {
-              onInput(e.currentTarget.value);
-            }
-          }}
-          onChange={(e) => {
-            if (onChanged) {
-              onChanged(e.currentTarget.value);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'enter') {
-              if (onEnter) {
-                onEnter(e.currentTarget.value);
-              }
-            }
-          }}
-        />
-        <InputRightElement w="auto" mr="2" pointerEvents="none">
-          <HStack spacing="3">
-            <Kbd>{modifier}</Kbd> <span>+</span> <Kbd>{shortcutKey}</Kbd>
-          </HStack>
-        </InputRightElement>
-      </InputGroup>
-    </Container>
-  );
+    <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={() => {}} >
+      <ModalOverlay />
+      <ModalContent maxW='50%'>
+        <ModalBody>
+          <ShortcutSearchInput modifier={modifier} shortcutKey={shortcutKey} label={label} inputValue={inputValue} setInputValue={setInputValue} onInput={onInput} onChanged={onChanged} onEnter={onEnter} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+      )
 }
